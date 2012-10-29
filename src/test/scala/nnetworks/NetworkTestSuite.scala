@@ -60,17 +60,36 @@ class NetworkTestSuite extends FunSuite {
 
   test("Test XOR with steep activation function") {
     val activation = Functions.steep(0.5)
-    val weights: List[List[Double]] = List(List(-30.0, 20, 20), List( 10., -20., -10.))
+    val weights: List[List[Double]] = List(List(-30.0, 20, 20), List(10., -20., -10.))
     val layer = new Layer(activation, weights)
 
     val weights2: List[List[Double]] = List(List(-10.0, 20, 20))
     val layer2 = new Layer(activation, weights2)
 
     val net = new Network(List(layer, layer2))
-    assert(net.eval(List( 0., 0.)) === List(1))
-    assert(net.eval(List( 0., 1.)) === List(0))
+    assert(net.eval(List(0., 0.)) === List(1))
+    assert(net.eval(List(0., 1.)) === List(0))
     assert(net.eval(List(1., 0.)) === List(0))
     assert(net.eval(List(1., 1.)) === List(1))
   }
-  
+
+  test("Random weights generator") {
+    assert(Generator.randomWeigth(0, 1)(2, 2).length === 2)
+  }
+
+  test("Network with random weights") {
+    val layer = new Layer(Functions.steep(0.5), Generator.randomWeigth(-30, 30), 2, 2)
+    val net = new Network(List(layer))
+    assert((layer.getWeights.length === 2))
+    // 3  because we expect the layer to generate weight to bias neuron as well
+    assert((layer.getWeights(0).length === 3))
+  }
+
+  ignore("Tets reading from file") {
+    val input = Generator.getInputsFromFile("E:/Projects/scala-neural-network/src/test/scala/resources/test_input.txt")
+    val weights: List[List[Double]] = List(List(-30.0, 20, 20))
+    val layer = new Layer(Functions.steep(0.5), weights)
+    val net = new Network(List(layer))
+    assert(net.eval(input) === List(0))
+  }
 }

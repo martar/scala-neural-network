@@ -13,6 +13,25 @@ object Functions {
     steep_0
   }
   def identitiy(v: Double): Double = v
+
+}
+
+object Generator {
+
+  def randomWeigth(min: Double, max: Double)(currLayerSize: Int, nextLayerSize: Int): List[List[Double]] = {
+    def randomWithinRange(min: Double, max: Double) = min + (max - min) * Random.nextDouble()
+    def randomWeight_0(currLayerSize: Int, nextLayerSize: Int, accu: List[List[Double]]): List[List[Double]] = currLayerSize match {
+      case 0 => accu
+      case _ => randomWeight_0(currLayerSize - 1, nextLayerSize, List.fill(nextLayerSize)(randomWithinRange(min, max)) :: accu)
+    }
+    randomWeight_0(currLayerSize, nextLayerSize, List())
+  }
+
+  def getInputsFromFile(path: String): List[Double] = {
+    def parseDouble(s: String): Double = try { s.toDouble } catch { case _ => 0. }
+    
+    io.Source.fromFile(path).getLines().toList map parseDouble _
+  }
 }
 
 /**
@@ -21,9 +40,11 @@ object Functions {
 
 class Layer(activation: Double => Double, weights: List[List[Double]]) {
 
-  def genRandom() = {
-    Seq.fill(weights.length)(Random.nextDouble)
-  }
+  def getWeights: List[List[Double]] = weights
+
+  def this(activation: Double => Double, weightGen: (Int, Int) => List[List[Double]], currLayerSize: Int, nextLayerSize: Int) =
+    // adding one because of the Bias neuron
+    this(activation: Double => Double, weightGen(currLayerSize, nextLayerSize + 1))
 
   def multiThreadedLinearCombination(input: List[Double], matrix: List[List[Double]]) = {
 
