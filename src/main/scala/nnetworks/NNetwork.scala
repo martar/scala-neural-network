@@ -1,6 +1,7 @@
 package nnetworks
 
 import scala.Array.canBuildFrom
+import scala.util.Random
 
 object Functions {
   def sigmoid(v: Double): Double = 1.0 / (1.0 + math.exp(-v))
@@ -17,28 +18,28 @@ object Functions {
 /**
  * layer is a two dimensional array of doubles - weights
  */
-class Layer(activation: Double => Double, weights: Array[Array[Double]]) {
 
-  /**
-   * Multiply input vector with weight matrix
-   * Fastest implementation based on http://blog.scala4java.com/2011/12/matrix-multiplication-in-scala-single.html
-   */
-  def multiThreadedIdiomatic(m1: Array[Double], m2: Array[Array[Double]]) = {
-    val res = Array.fill[Double](m2(0).length)(0.0)
-    for (
-      col <- (0 until m2(0).length).par;
-      i <- 0 until m1.par.length
-    ) {
-      res(col) += m1(i) * m2(i)(col)
+class Layer(activation: Double => Double, weights: List[List[Double]]) {
+
+  def genRandom() = {
+    Seq.fill(weights.length)(Random.nextDouble)
+  }
+
+  def multiThreadedLinearCombination(input: List[Double], matrix: List[List[Double]]) = {
+
+    def helper(input: List[Double], matrix: List[List[Double]], accu: List[Double]): List[Double] = matrix match {
+      case Nil => accu.reverse
+      case head :: tail => helper(input, tail, (head.par.zip(input.par) map ((tuple: (Double, Double)) => tuple._1 * tuple._2) sum) :: accu)
     }
-    res.toList
+    helper(input, matrix, List())
+
   }
 
   /**
    * Evaluate the layer: multiply input with weights and apply activation function to each neuron
    */
   def eval(input: List[Double]): List[Double] = {
-    multiThreadedIdiomatic(input.toArray, weights) map (activation)
+    multiThreadedLinearCombination(input, weights) map (activation)
   }
 }
 
@@ -49,9 +50,8 @@ class Network(layers: List[Layer]) {
       case head :: tail => eval0(tail, 1 :: head.eval(input)) //we add a bias neuron set to 1
 
     }
-  //add a bias neuron set to 1
-     eval0(layers, 1 :: input)
+    //add a bias neuron set to 1
+    eval0(layers, 1 :: input)
   }
-
 
 }

@@ -27,7 +27,7 @@ class NetworkTestSuite extends FunSuite {
   }
 
   test("Test AND layer implemented with activation function") {
-    val weights: Array[Array[Double]] = Array(Array(-30.0), Array(20), Array(20))
+    val weights: List[List[Double]] = List(List(-30., 20, 20))
     val layer = new Layer(Functions.steep(0.5), weights)
 
     assert(layer.eval(List(1., 0., 0.)) === List(0))
@@ -38,7 +38,7 @@ class NetworkTestSuite extends FunSuite {
   }
 
   test("Test XOR first layer network implemented") {
-    val weights: Array[Array[Double]] = Array(Array(-30.0, 10.), Array(20, -20.), Array(20, -10.))
+    val weights: List[List[Double]] = List(List(-30., 20., 20.), List(10., -20., -10.))
     val layer = new Layer(Functions.steep(0.5), weights)
 
     assert(layer.eval(List(1., 0., 0.)) === List(0, 1))
@@ -49,7 +49,7 @@ class NetworkTestSuite extends FunSuite {
   }
 
   test("Test AND network implemented with activation function - Network! with explicit Bias") {
-    val weights: Array[Array[Double]] = Array(Array(-30.0), Array(20), Array(20))
+    val weights: List[List[Double]] = List(List(-30.0, 20, 20))
     val layer = new Layer(Functions.steep(0.5), weights)
     val net = new Network(List(layer))
     assert(net.eval(List(0., 0.)) === List(0))
@@ -58,12 +58,12 @@ class NetworkTestSuite extends FunSuite {
     assert(net.eval(List(1., 1.)) === List(1))
   }
 
-  test("Test XOR network implemented with steep activation function - Network!") {
+  test("Test XOR with steep activation function") {
     val activation = Functions.steep(0.5)
-    val weights: Array[Array[Double]] = Array(Array(-30.0, 10.), Array(20, -20.), Array(20, -10.))
+    val weights: List[List[Double]] = List(List(-30.0, 20, 20), List( 10., -20., -10.))
     val layer = new Layer(activation, weights)
 
-    val weights2: Array[Array[Double]] = Array(Array(-10.0), Array(20), Array(20))
+    val weights2: List[List[Double]] = List(List(-10.0, 20, 20))
     val layer2 = new Layer(activation, weights2)
 
     val net = new Network(List(layer, layer2))
@@ -72,5 +72,5 @@ class NetworkTestSuite extends FunSuite {
     assert(net.eval(List(1., 0.)) === List(0))
     assert(net.eval(List(1., 1.)) === List(1))
   }
-
+  
 }
