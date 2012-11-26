@@ -3,8 +3,6 @@ package nnetworks
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
 /**
  * This class is a test suite for the methods in object FunSets. To run
@@ -51,11 +49,39 @@ class NetworkTestSuite extends FunSuite {
   test("Test AND network implemented with activation function - Network! with explicit Bias") {
     val weights: List[List[Double]] = List(List(-30.0, 20, 20))
     val layer = new Layer(Functions.steep(0.5), weights)
-    val net = new Network(List(layer))
+    val net = new Network(List(layer), true)
     assert(net.eval(List(0., 0.)) === List(0))
     assert(net.eval(List(0., 1.)) === List(0))
     assert(net.eval(List(1., 0.)) === List(0))
     assert(net.eval(List(1., 1.)) === List(1))
+  }
+
+  test("Test AND network implemented lab") {
+    val weights: List[List[Double]] = List(List(0.34, -0.14, -0.97))
+    val layer = new Layer(Functions.identitiy, weights)
+    val net = new Network(List(layer), true)
+    println(net.eval(List(0., 0.)))
+    println(net.eval(List(0., 1.)))
+    println(net.eval(List(1., 0.)))
+    println(net.eval(List(1., 1.)))
+    //assert(net.eval(List(0., 0.)) === List(0))
+    //assert(net.eval(List(0., 1.)) === List(0))
+    //assert(net.eval(List(1., 0.)) === List(0))
+    //assert(net.eval(List(1., 1.)) === List(1))
+  }
+  
+  test("Test AND network implemented lab2") {
+    val weights: List[List[Double]] = List(List(-8.93, 5.89, 5.89))
+    val layer = new Layer(Functions.sigmoid, weights)
+    val net = new Network(List(layer), true)
+    println(net.eval(List(0.7, 0.7)))
+    //println(net.eval(List(0., 1.)))
+    //println(net.eval(List(1., 0.)))
+    //println(net.eval(List(1., 1.)))
+    //assert(net.eval(List(0., 0.)) === List(0))
+    //assert(net.eval(List(0., 1.)) === List(0))
+    //assert(net.eval(List(1., 0.)) === List(0))
+    //assert(net.eval(List(1., 1.)) === List(1))
   }
 
   test("Test XOR with steep activation function") {
@@ -66,7 +92,7 @@ class NetworkTestSuite extends FunSuite {
     val weights2: List[List[Double]] = List(List(-10.0, 20, 20))
     val layer2 = new Layer(activation, weights2)
 
-    val net = new Network(List(layer, layer2))
+    val net = new Network(List(layer, layer2), true)
     assert(net.eval(List(0., 0.)) === List(1))
     assert(net.eval(List(0., 1.)) === List(0))
     assert(net.eval(List(1., 0.)) === List(0))
@@ -74,22 +100,22 @@ class NetworkTestSuite extends FunSuite {
   }
 
   test("Random weights generator") {
-    assert(Generator.randomWeigth(0, 1)(2, 2).length === 2)
+    assert(Generator.randomWeigth(true)(0, 1)(2, 2).length === 2)
   }
 
   test("Network with random weights") {
-    val layer = new Layer(Functions.steep(0.5), Generator.randomWeigth(-30, 30), 2, 2)
-    val net = new Network(List(layer))
-    assert((layer.getWeights.length === 2))
+    val layer = new Layer(Functions.steep(0.5), Generator.randomWeigth(true)(-30, 30), 2, 2)
+    val net = new Network(List(layer), true)
+    assert((layer.weights.length === 2))
     // 3  because we expect the layer to generate weight to bias neuron as well
-    assert((layer.getWeights(0).length === 3))
+    assert((layer.weights(0).length === 3))
   }
 
   ignore("Tets reading from file") {
     val input = Generator.getInputsFromFile("E:/Projects/scala-neural-network/src/test/scala/resources/test_input.txt")
     val weights: List[List[Double]] = List(List(-30.0, 20, 20))
     val layer = new Layer(Functions.steep(0.5), weights)
-    val net = new Network(List(layer))
+    val net = new Network(List(layer), true)
     assert(net.eval(input) === List(0))
   }
 }
