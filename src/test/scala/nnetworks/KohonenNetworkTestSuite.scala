@@ -13,7 +13,7 @@ import org.scalatest.FunSuite
 @RunWith(classOf[JUnitRunner])
 class KohonenNetworkTestSuite extends FunSuite {
 
-  test("Test always two layers in Network") {
+  test("Test Kohonen") {
 
     val input1 = List(
       1., 0., 0.,

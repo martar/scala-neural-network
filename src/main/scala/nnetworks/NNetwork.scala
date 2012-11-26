@@ -146,9 +146,6 @@ class KohonenNetwork(layers: List[Layer]) extends Network(layers, false) {
 
     def learn_step(inputValues: List[Double], alfa: Double, beta: Double) = {
 
-      def updateWinningFrequency(winnerId: Int) = {}
-      def updateWeights(steep: Int, winnerId: Int) = {}
-
       def gen_new_weight() = {
         def get_neigbours_indexes(neuronIndex: Int, dist: Int) = {
           (0 to getFirstLayer.weights.length) filter { i => math.abs(neuronIndex - i) <= dist }
