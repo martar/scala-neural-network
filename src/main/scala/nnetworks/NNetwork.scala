@@ -99,17 +99,20 @@ class KohonenNetwork(layers: List[Layer]) extends Network(layers, false) {
   val len = getFirstLayer.weights(0).length
   var conscience = List.fill(len - 1)(1.0 / len)
 
+  /**
+   * Compute distance between input vector and weights that go to the particular output neuron
+   */
   def computeDistance(weights: List[Double], inputValues: List[Double]) = {
     math.sqrt(inputValues.zip(weights).map((tuple: (Double, Double)) => math.pow(tuple._1 - tuple._2, 2)) sum)
   }
 
-  def getWinner0(allNeuronsWeights: List[List[Double]], inputValues: List[Double], accu: List[Double]): List[Double] = allNeuronsWeights match {
+  def getDistancesVector(allNeuronsWeights: List[List[Double]], inputValues: List[Double], accu: List[Double]): List[Double] = allNeuronsWeights match {
     case Nil => accu
-    case head :: tail => getWinner0(tail, inputValues, computeDistance(head, inputValues) :: accu)
+    case head :: tail => getDistancesVector(tail, inputValues, computeDistance(head, inputValues) :: accu)
   }
 
   def getWinner(inputValues: List[Double]) = {
-    getWinner0(getFirstLayer.weights, inputValues, List()).zipWithIndex.min._2
+    getDistancesVector(getFirstLayer.weights, inputValues, List()).zipWithIndex.min._2
   }
 
   def getWinnerWhileLearning(inputValues: List[Double], cons :Double, beta: Double) = {
@@ -122,7 +125,7 @@ class KohonenNetwork(layers: List[Layer]) extends Network(layers, false) {
       conscience.zipWithIndex.map((tuple: (Double, Int)) => if (tuple._2 == winnerId) tuple._1 - beta * (1.0 - tuple._1) else tuple._1 + beta * (0.0 - tuple._1))
 
     }
-    val distances = apply_conscience(getWinner0(getFirstLayer.weights, inputValues, List()), conscience)
+    val distances = apply_conscience(getDistancesVector(getFirstLayer.weights, inputValues, List()), conscience)
     val winnerId = distances.zipWithIndex.min._2
     update_conscience(winnerId, beta)
     winnerId
