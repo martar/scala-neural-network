@@ -103,7 +103,7 @@ class KohonenNetwork(layers: List[Layer]) extends Network(layers, false) {
    * Compute distance between input vector and weights that go to the particular output neuron
    */
   def computeDistance(weights: List[Double], inputValues: List[Double]) = {
-    math.sqrt(inputValues.zip(weights).map((tuple: (Double, Double)) => math.pow(tuple._1 - tuple._2, 2)) sum)
+    inputValues.zip(weights).map((tuple: (Double, Double)) => math.pow(tuple._1 - tuple._2, 2)) sum
   }
 
   def getDistancesVector(allNeuronsWeights: List[List[Double]], inputValues: List[Double], accu: List[Double]): List[Double] = allNeuronsWeights match {
@@ -153,24 +153,29 @@ class KohonenNetwork(layers: List[Layer]) extends Network(layers, false) {
         def get_neigbours_indexes(neuronIndex: Int, dist: Int) = {
           (0 to getFirstLayer.weights.length) filter { i => math.abs(neuronIndex - i) <= dist }
         }
+        //to do 2D
+        
         val neighgour_indexes = get_neigbours_indexes(getWinnerWhileLearning(inputValues, cons, beta), neighbour_range)
+        
         def gen_new_weight0(list: List[List[Double]], index: Int, accu: List[List[Double]]): List[List[Double]] = (list, neighgour_indexes contains index) match {
           case (Nil, _) => accu.reverse
           case (head :: tail, false) => gen_new_weight0(tail, index + 1, head :: accu)
           case (head :: tail, true) => {
-            val new_weights = head.map { (weight: Double) => weight + alfa * math.exp(- math.pow((inputValues(index) - weight),2) / math.pow(neighbour_range,2)) * (inputValues(index) - weight) }
+            val new_weights = head.map { (weight: Double) => weight + alfa * math.exp(- math.pow(getWinner(inputValues)-index,2) / math.pow(neighbour_range,2)) * (inputValues(index) - weight) }
             gen_new_weight0(tail, index + 1, new_weights :: accu)
           }
         }
 
         gen_new_weight0(getFirstLayer.weights, 0, List())
       }
+      
       getFirstLayer.setWeights(gen_new_weight())
 
     }
 
     for (i <- 1 to steps) {
       for (j <- 0 to trainingSet.length - 1) {
+        
         learn_step(trainingSet(j), alfa, beta)
       }
 

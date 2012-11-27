@@ -46,10 +46,16 @@ class KohonenNetworkTestSuite extends FunSuite {
       0., 0., 1.,
       0, 1., 1,
       0, 0, 1)
+    val test4 = List(
+      0., 0., 0.,
+      0, 1., 0,
+      0, 0, 0)
     val layer = new Layer(Functions.identitiy, Generator.randomWeigth(false)(0, 0.1), trainingSet.length, trainingSet(0).length)
     val net = new KohonenNetwork(List(layer))
     // traning et, iterations, neighbour_range, conscience, alfa, beta
-    net.learn(trainingSet, 32000, 1, 0.75, 0.03, 0.25)
+    net.learn(trainingSet, 8000, 1, 0.75, 0.06, 0.25)
+    net.learn(trainingSet, 8000, 1, 0.75, 0.03, 0.25)
+    net.learn(trainingSet, 8000, 1, 0.75, 0.02, 0.25)
     println(net.getWinner(input1))
     println(net.getWinner(input2))
     println(net.getWinner(input3))
@@ -58,6 +64,7 @@ class KohonenNetworkTestSuite extends FunSuite {
     println(net.getWinner(test1))
     println(net.getWinner(test2))
     println(net.getWinner(test3))
+    println(net.getWinner(test4))
   }
 
 }
