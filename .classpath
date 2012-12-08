@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="lib_managed/jars/|lib_managed/|src/main/scala/|src/test/scala/|project/target/" kind="src" path=""/>
+	<classpathentry kind="src" path="src/main/scala"/>
+	<classpathentry excluding="resources/" kind="src" path="src/test/scala"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib_managed/jars/junit/junit/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib_managed/jars/org.scalatest/scalatest_2.9.2/scalatest_2.9.2-1.8.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
