@@ -3,6 +3,10 @@ package nnetworks
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import nnetworks.Layer
+import nnetworks.Generator
+import nnetworks.Functions
+
 
 /**
  * This class is a test suite for the methods in object FunSets. To run
@@ -82,6 +86,7 @@ class KohonenGrossbergNetworkTestSuite extends FunSuite {
           
     val klayer = new Layer(Functions.identitiy, Generator.randomWeigth(false)(0, 0.1), trainingSet.length, trainingSet(0).length)
     val glayer = new Layer(Functions.identitiy, Generator.randomWeigth(false)(0, 0.1), 3, 9)
+    /*
     val net = new KohonenGrossbergNetwork(List(klayer,glayer),false)
     // traning et, iterations, neighbour_range, conscience, alfa, beta
     net.learn(trainingSet, 20000, 1, 0.75, 0.06, 0.25, outputsSet)
@@ -93,6 +98,7 @@ class KohonenGrossbergNetworkTestSuite extends FunSuite {
     net.getGrossRes(test1)
     net.getGrossRes(test2)
     net.getGrossRes(test3)    
+    */
     
   }
 }
