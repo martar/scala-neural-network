@@ -3,6 +3,10 @@ package nnetworks
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import nnetworks.Network
+import nnetworks.Layer
+import nnetworks.Generator
+import nnetworks.Functions
 
 /**
  * This class is a test suite for the methods in object FunSets. To run
@@ -69,7 +73,7 @@ class NetworkTestSuite extends FunSuite {
     //assert(net.eval(List(1., 0.)) === List(0))
     //assert(net.eval(List(1., 1.)) === List(1))
   }
-  
+
   test("Test AND network implemented lab2") {
     val weights: List[List[Double]] = List(List(-8.93, 5.89, 5.89))
     val layer = new Layer(Functions.sigmoid, weights)
@@ -117,5 +121,29 @@ class NetworkTestSuite extends FunSuite {
     val layer = new Layer(Functions.steep(0.5), weights)
     val net = new Network(List(layer), true)
     assert(net.eval(input) === List(0))
+    
   }
+
+   
+  test("Test Backpropagation") {
+    val trainingSet = List(List(0., 0.), List(0., 1.), List(1., 0.), List(1., 1.))
+    val teacherSet = List(List(0.), List(1.), List(1.), List(1.))
+    val weights: List[List[Double]] = List(List(math.random, math.random,math.random), List(math.random, math.random, math.random))
+    val layer = new Layer(Functions.sigmoid, weights)
+
+    val weights2: List[List[Double]] = List(List(math.random, math.random, math.random))
+    val layer2 = new Layer(Functions.sigmoid, weights2)
+    
+    val net = new Network(List(layer, layer2), true)
+    val alfa = 0.3
+    println("BEFORE LERNING:")
+    println(net.layers)
+    println("LERNING:")
+    net.backPropagaton((trainingSet, teacherSet).zipped.toList, alfa)
+    println("WEIGHTS AFTER LEARNIGN:")
+    println(net.layers)
+  }
+
+    
+   
 }

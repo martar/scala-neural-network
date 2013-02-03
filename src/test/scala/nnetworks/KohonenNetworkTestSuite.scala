@@ -3,6 +3,10 @@ package nnetworks
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import nnetworks.Layer
+import nnetworks.KohonenNetwork
+import nnetworks.Generator
+import nnetworks.Functions
 
 /**
  * This class is a test suite for the methods in object FunSets. To run
