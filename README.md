@@ -1,0 +1,1 @@
+Neural Network Project AGH, Informatyka. Marta Ry³ko & Mateusz Jastrz¹b. 2012/2013
